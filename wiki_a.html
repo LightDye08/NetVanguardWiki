@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki - Netvanguard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-plan="professional">
+    <div class="wiki-container">
+        <div class="wiki-header">
+            <div class="plan-badge">
+                <span>Plan: <strong>Profesional</strong></span>
+                <button id="change-plan-btn"><i class="fas fa-sync-alt"></i> Cambiar</button>
+            </div>
+            <h1>Wiki del Proyecto Netvanguard</h1>
+            <p>Documentación técnica completa de la plataforma de desarrollo web</p>
+        </div>
+        
+        <!-- Plan Selection Modal -->
+        <div id="plan-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2><i class="fas fa-crown"></i> Seleccionar Plan</h2>
+                <p>Elija un plan para acceder a diferentes funcionalidades de la wiki</p>
+                
+                <div class="plan-cards">
+                    <div class="plan-card" data-plan="basic">
+                        <h3>Básico</h3>
+                        <ul>
+                            <li>Acceso a documentación básica</li>
+                            <li>Vista previa de Markdown</li>
+                            <li>Búsqueda simple</li>
+                        </ul>
+                        <button class="select-plan-btn" data-plan="basic">Seleccionar</button>
+                    </div>
+                    
+                    <div class="plan-card" data-plan="professional">
+                        <h3>Profesional</h3>
+                        <ul>
+                            <li>Todas las características Básicas</li>
+                            <li>Acceso a diagramas técnicos</li>
+                            <li>Funcionalidades premium</li>
+                            <li>Historial de cambios</li>
+                        </ul>
+                        <button class="select-plan-btn" data-plan="professional">Seleccionar</button>
+                    </div>
+                    
+                    <div class="plan-card" data-plan="premium">
+                        <h3>Premium</h3>
+                        <ul>
+                            <li>Todas las características Profesionales</li>
+                            <li>Soporte prioritario</li>
+                            <li>Exportación PDF</li>
+                            <li>Acceso a roadmap detallado</li>
+                        </ul>
+                        <button class="select-plan-btn" data-plan="premium">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="wiki-layout">
+            <div class="wiki-sidebar">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Buscar en la wiki...">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="breadcrumbs">
+                    <a href="#">Inicio</a> / <a href="#">Documentación</a> / <span>Netvanguard</span>
+                </div>
+                
+                <div class="wiki-nav-vertical">
+                    <a class="nav-btn active" href="#overview"><i class="fas fa-home"></i> Resumen</a>
+                    <a class="nav-btn" href="#architecture"><i class="fas fa-sitemap"></i> Arquitectura</a>
+                    <a class="nav-btn" href="#features"><i class="fas fa-cogs"></i> Funcionalidades</a>
+                    <a class="nav-btn" href="#ui-ux"><i class="fas fa-paint-brush"></i> UI/UX</a>
+                    <a class="nav-btn" href="#progress"><i class="fas fa-tasks"></i> Progreso</a>
+                    <a class="nav-btn" href="#security"><i class="fas fa-shield-alt"></i> Seguridad</a>
+                    <a class="nav-btn" href="#deployment"><i class="fas fa-cloud-upload-alt"></i> Despliegue</a>
+                    <a class="nav-btn" href="#future"><i class="fas fa-road"></i> Futuro</a>
+                </div>
+                
+                <div class="premium-section">
+                    <h4><i class="fas fa-crown"></i> Funcionalidades Premium</h4>
+                    <a class="nav-btn professional-link" href="#advanced-features"><i class="fas fa-star"></i> Características Avanzadas</a>
+                    <a class="nav-btn premium-link" href="#roadmap"><i class="fas fa-map"></i> Roadmap Detallado</a>
+                    <a class="nav-btn professional-link" href="#api-docs"><i class="fas fa-code"></i> Documentación API</a>
+                </div>
+            </div>
+            <div class="wiki-content">
+                <div id="wiki-sections"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.18/marked.min.js"></script>
+    
+    <!-- Our JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
