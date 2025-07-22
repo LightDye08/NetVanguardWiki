@@ -219,3 +219,6 @@ Los cambios clave incluyen:
 6. Documentación de desviaciones técnicas con soluciones implementadas
 
 El enfoque mantiene un balance entre funcionalidad y recursos disponibles, priorizando un MVP funcional con características básicas de seguridad y usabilidad.
+
+
+Oscar Jesús Trejo Rocha
