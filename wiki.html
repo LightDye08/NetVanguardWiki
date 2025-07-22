@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki - Netvanguard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="wiki-container">
+        <div class="wiki-header">
+            <h1>Wiki del Proyecto Netvanguard</h1>
+            <p>Documentación técnica completa de la plataforma de desarrollo web</p>
+        </div>
+        
+        <div class="wiki-nav">
+            <a class="nav-btn active" href="#overview"><i class="fas fa-home"></i> Resumen</a>
+            <a class="nav-btn" href="#architecture"><i class="fas fa-sitemap"></i> Arquitectura</a>
+            <a class="nav-btn" href="#features"><i class="fas fa-cogs"></i> Funcionalidades</a>
+            <a class="nav-btn" href="#ui-ux"><i class="fas fa-paint-brush"></i> UI/UX</a>
+            <a class="nav-btn" href="#progress"><i class="fas fa-tasks"></i> Progreso</a>
+            <a class="nav-btn" href="#security"><i class="fas fa-shield-alt"></i> Seguridad</a>
+            <a class="nav-btn" href="#deployment"><i class="fas fa-cloud-upload-alt"></i> Despliegue</a>
+            <a class="nav-btn" href="#future"><i class="fas fa-road"></i> Futuro</a>
+        </div>
+        
+        <div id="wiki-content" class="wiki-content">
+            <!-- El contenido se generará dinámicamente desde content.md -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        // Mapa de iconos para secciones
+        const sectionIcons = {
+            overview: "fa-home",
+            architecture: "fa-sitemap",
+            features: "fa-cogs",
+            "ui-ux": "fa-paint-brush",
+            progress: "fa-tasks",
+            security: "fa-shield-alt",
+            deployment: "fa-cloud-upload-alt",
+            future: "fa-road"
+        };
+
+        // Función para cargar el archivo Markdown
+        async function loadMarkdownFile() {
+            try {
+                const response = await fetch('content.md');
+                if (!response.ok) throw new Error('Archivo Markdown no encontrado');
+                return await response.text();
+            } catch (error) {
+                console.error('Error cargando Markdown:', error);
+                return `# Error al cargar el contenido\n\n${error.message}`;
+            }
+        }
+
+        // Función para generar secciones de la wiki
+        function generateWikiSections(markdownContent) {
+            const sections = markdownContent.split('## ');
+            let htmlContent = '';
+            
+            sections.forEach((section, index) => {
+                if (!section.trim()) return;
+                
+                // Obtener el título de la sección (primera línea)
+                const sectionLines = section.split('\n');
+                const sectionTitle = sectionLines[0].trim();
+                const sectionId = sectionTitle.toLowerCase().replace(/\s+/g, '-');
+                
+                // Obtener el contenido restante
+                sectionLines.shift();
+                const sectionContent = sectionLines.join('\n');
+                
+                // Convertir Markdown a HTML
+                const htmlContent = convertMarkdownToHtml(sectionContent);
+                
+                // Generar HTML de la sección
+                htmlContent += `
+                    <div class="wiki-section" id="${sectionId}-section">
+                        <div class="section-header">
+                            <i class="fas ${sectionIcons[sectionId] || 'fa-file-alt'}"></i>
+                            <h2 id="${sectionId}">${sectionTitle}</h2>
+                        </div>
+                        <div class="section-content">${htmlContent}</div>
+                    </div>
+                `;
+            });
+            
+            return htmlContent;
+        }
+
+        // Función para convertir Markdown a HTML
+        function convertMarkdownToHtml(markdown) {
+            // Convertir encabezados
+            let html = markdown
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+            
+            // Convertir listas
+            html = html
+                .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                .replace(/^\- (.*$)/gim, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/gims, '<ul>$1</ul>');
+            
+            // Convertir código
+            html = html
+                .replace(/```([\s\S]*?)```/g, '<pre class="code-block"><code>$1</code></pre>')
+                .replace(/`(.*?)`/g, '<code>$1</code>');
+            
+            // Convertir enlaces
+            html = html
+                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+            
+            // Convertir texto en negrita y cursiva
+            html = html
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Convertir tablas (simple)
+            html = html.replace(/\|(.*)\|/g, (match) => {
+                const rows = match.trim().split('\n');
+                let tableHtml = '<table class="comparison-table"><tbody>';
+                
+                rows.forEach(row => {
+                    if (row.trim() === '') return;
+                    const cells = row.split('|').filter(cell => cell.trim() !== '');
+                    tableHtml += '<tr>';
+                    
+                    cells.forEach(cell => {
+                        // Comprobar si es encabezado (primera fila)
+                        if (rows.indexOf(row) === 1) {
+                            const isHeader = row === rows[1];
+                            if (isHeader) {
+                                tableHtml += `<th>${cell.trim()}</th>`;
+                            } else {
+                                tableHtml += `<td>${cell.trim()}</td>`;
+                            }
+                        } else {
+                            tableHtml += `<td>${cell.trim()}</td>`;
+                        }
+                    });
+                    
+                    tableHtml += '</tr>';
+                });
+                
+                tableHtml += '</tbody></table>';
+                return tableHtml;
+            });
+            
+            // Convertir párrafos
+            html = html
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+            
+            return html;
+        }
+
+        // Función principal para cargar contenido
+        async function loadContent() {
+            try {
+                const markdown = await loadMarkdownFile();
+                const contentHtml = generateWikiSections(markdown);
+                document.getElementById('wiki-content').innerHTML = contentHtml;
+                
+                // Resaltar bloques de código
+                document.querySelectorAll('pre code').forEach(block => {
+                    hljs.highlightElement(block);
+                });
+                
+                // Configurar navegación
+                setupNavigation();
+            } catch (error) {
+                console.error('Error cargando contenido:', error);
+                document.getElementById('wiki-content').innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error al cargar el contenido</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Configurar navegación
+        function setupNavigation() {
+            // Navegación entre secciones
+            document.querySelectorAll('.nav-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(`${targetId}-section`);
+                    
+                    if(targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Resaltar sección actual
+            const sections = document.querySelectorAll('.wiki-section');
+            const navButtons = document.querySelectorAll('.nav-btn');
+            
+            function setActiveSection() {
+                let currentSection = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if(window.scrollY >= (sectionTop - 150)) {
+                        currentSection = `#${section.id.replace('-section', '')}`;
+                    }
+                });
+                
+                navButtons.forEach(button => {
+                    button.classList.remove('active');
+                    if(button.getAttribute('href') === currentSection) {
+                        button.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', setActiveSection);
+            setActiveSection();
+        }
+
+        // Iniciar cuando el documento esté cargado
+        document.addEventListener('DOMContentLoaded', loadContent);
+    </script>
+</body>
+</html>
